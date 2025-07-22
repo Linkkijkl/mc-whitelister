@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 may_minihttp = "0.1"
 mc-rcon = "0.1"
+lazy_static = "1.5"
+sailfish = "0.9"
