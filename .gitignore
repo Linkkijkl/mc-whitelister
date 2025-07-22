@@ -1,1 +1,7 @@
 /target
+
+# Development environment variables
+/.devcontainer/devcontainer.env
+
+# VSCode launch configurations
+/.vscode/launch.json

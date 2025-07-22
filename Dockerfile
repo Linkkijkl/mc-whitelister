@@ -8,7 +8,7 @@ ENV RUSTFLAGS="-C target-feature=-crt-static"
 # Future debugger: add your additional Rust specific files to the bellow.
 # Specifying files makes Docker use cache if they are not modified,
 # skipping the tidiously long build.
-COPY Cargo.lock Cargo.toml .
+COPY Cargo.lock Cargo.toml ./
 COPY src src
 COPY templates templates
 RUN cargo build --release --bin mc-whitelister
