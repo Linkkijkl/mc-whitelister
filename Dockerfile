@@ -14,7 +14,6 @@ RUN cargo build --release --bin mc-whitelister
 
 # Final container
 FROM alpine AS runtime
-RUN apk add --no-cache libpq-dev libgcc
 WORKDIR /app
 COPY --from=builder /app/target/release/mc-whitelister .
 USER 1000

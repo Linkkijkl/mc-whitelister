@@ -3,12 +3,46 @@
 <html>
     <head>
         <title><%= title %></title>
+        <style>
+            .whitelist-form {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
         <script>
-            
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#submit').addEventListener('click', async () => {
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+        
+        if (username == '' || password == '') {
+            console.error('no username or password provided');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/${username}`);
+            console.log(response.body);
+        } catch (e) {
+            console.error(e.message);
+        }
+    })
+});
+
         </script>
     </head>
     <body>
         <h1><%= title %></h1>
+        <!-- rules -->
+        <!-- whitelist form -->
+        <div class="whitelist-form">
+            <label for="username">Minecraft username:</label>
+            <input type="text" id="username" name="username" />
+            <label for="password">Whitelist password:</label>
+            <input type="password" id="password" name="password" />
+            <button id="submit">Submit</button>
+        </div>
         <iframe src="<%= map_url %>" width="600"></iframe>
     </body>
 </html>
