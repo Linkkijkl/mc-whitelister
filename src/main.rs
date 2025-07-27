@@ -28,50 +28,76 @@ struct HelloWorld;
 
 impl HttpService for HelloWorld {
     fn call(&mut self, req: Request, rsp: &mut Response) -> io::Result<()> {
-        if req.path() == "/" {
+        // Api handling
+        let params: Vec<&str> = req.path().split("/").collect();
+        match params[..] {
             // Index page
-            rsp.header("content-type: text/html; charset=utf-8");
-            let ctx = IndexTemplate {
-                title: (*TITLE).clone(),
-                map_url: (*MAP_URL).clone(),
-            };
-            let content = ctx.render_once().unwrap();
-            let buffer_write_result = rsp.body_mut().write_str(&content);
-            if buffer_write_result.is_err() {
-                rsp.status_code(500, "buffer write error");
+            ["", ""] => {
+                // Render page from template
+                let ctx = IndexTemplate {
+                    title: (*TITLE).clone(),
+                    map_url: (*MAP_URL).clone(),
+                };
+                let content = ctx.render_once().unwrap();
+
+                // Return rendered page
+                let buffer_write_result = rsp.body_mut().write_str(&content);
+                if buffer_write_result.is_err() {
+                    rsp.status_code(500, "buffer write error");
+                }
+                rsp.header("content-type: text/html; charset=utf-8");
             }
-        } else {
-            // Api handling
-            let params: Vec<&str> = req.path().split("/").collect();
-            if let ["", username] = params[..] {
+
+            // JavaScript
+            ["", "main.js"] => {
+                rsp.header("content-type: text/javascript");
+                rsp.body(include_str!("../static/main.js"));
+            }
+
+            // Whitelist api route
+            ["", "api", "whitelist", password, username] => {
+                if password != *WHITELIST_PASSWORD {
+                    rsp.status_code(400, "bad request");
+                    rsp.body("invalid whitelist password");
+                    return Ok(());
+                }
                 if !username.chars().all(char::is_alphanumeric) {
-                    rsp.status_code(400, "invalid username");
+                    rsp.status_code(400, "bad request");
+                    rsp.body("invalid username");
                     return Ok(());
                 }
                 let rcon = RconClient::connect(&*RCON_URL);
                 if rcon.is_err() {
-                    rsp.status_code(500, "could not connect to minecraft server");
+                    rsp.status_code(500, "internal server error");
+                    rsp.body("could not connect to minecraft server");
                     return Ok(());
                 }
                 let rcon = rcon.unwrap();
 
                 if rcon.log_in(&RCON_PASSWORD).is_err() {
-                    rsp.status_code(500, "could not authenticate to minecraft server");
+                    rsp.status_code(500, "internal server error");
+                    rsp.body("could not authenticate to minecraft server");
                     return Ok(());
                 }
                 if rcon
                     .send_command(&format!("whitelist add {username}"))
                     .is_err()
                 {
-                    rsp.status_code(500, "could not execute command");
+                    rsp.status_code(500, "internal server error");
+                    rsp.body("could not execute command");
                     return Ok(());
                 }
 
                 println!("Whitelisted {username}");
-            } else {
-                rsp.status_code(400, "bad input");
+            }
+
+            // 404
+            _ => {
+                rsp.status_code(404, "not found");
+                rsp.body("resource not found");
             }
         }
+
         Ok(())
     }
 }
