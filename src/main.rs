@@ -1,5 +1,3 @@
-extern crate may_minihttp;
-
 use include_dir_macro::include_dir;
 use lazy_static::lazy_static;
 use may_minihttp::{HttpServer, HttpService, Request, Response};
@@ -62,7 +60,7 @@ impl HttpService for HelloWorld {
                     rsp.body("invalid whitelist password");
                     return Ok(());
                 }
-                if !username.chars().all(char::is_alphanumeric) {
+                if !username.chars().all(|a| { char::is_alphanumeric(a) || a == '_' }) {
                     rsp.status_code(400, "bad request");
                     rsp.body("invalid username");
                     return Ok(());
