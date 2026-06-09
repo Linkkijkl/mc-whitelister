@@ -11,6 +11,7 @@ ENV RUSTFLAGS="-C target-feature=-crt-static"
 COPY Cargo.lock Cargo.toml ./
 COPY src src
 COPY templates templates
+COPY static static
 RUN cargo build --release --bin mc-whitelister
 
 # Final container
