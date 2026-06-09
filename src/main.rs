@@ -14,6 +14,7 @@ use std::{
 struct IndexTemplate {
     title: String,
     map_url: String,
+    info: String,
 }
 
 lazy_static! {
@@ -24,6 +25,7 @@ lazy_static! {
         std::env::var("WHITELIST_PASSWORD").expect("WHITELIST_PASSWORD not set!");
     static ref TITLE: String = std::env::var("TITLE").unwrap_or_default();
     static ref MAP_URL: String = std::env::var("MAP_URL").unwrap_or_default();
+    static ref INFO: String = std::env::var("INFO").unwrap_or_default();
 }
 
 #[derive(Clone)]
@@ -40,6 +42,7 @@ impl HttpService for HelloWorld {
                 let ctx = IndexTemplate {
                     title: (*TITLE).clone(),
                     map_url: (*MAP_URL).clone(),
+                    info: (*INFO).clone(),
                 };
                 let content = ctx.render_once().unwrap();
 

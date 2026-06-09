@@ -4,29 +4,53 @@
     <head>
         <title><%= title %></title>
         <style>
+            .main-container {
+                display: flex;
+            }
             .whitelist-form {
                 display: flex;
                 flex-direction: column;
+                z-index: 1;
+                width: 400px;
             }
             .error {
                 color: red;
+            }
+            #map {
+                position: relative;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+
+                iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                }
             }
         </style>
         <script src="/main.js">Please enable Javascript</script>
     </head>
     <body>
-        <h1><%= title %></h1>
-        <!-- rules -->
-        <!-- whitelist form -->
-        <div class="whitelist-form">
-            <label for="username">Minecraft username:</label>
-            <input type="text" id="username" name="username" />
-            <label for="password">Whitelist password:</label>
-            <input type="password" id="password" name="password" />
-            <p class="error" hidden></p>
-            <p class="response" hidden></p>
-            <button id="submit">Submit</button>
+        <div class="main-container">
+            <div class="whitelist-form">
+                <h1><%= title %></h1>
+                <p><%= info %></p>
+                <label for="username">Minecraft username:</label>
+                <input type="text" id="username" name="username" />
+                <label for="password">Whitelist password:</label>
+                <input type="password" id="password" name="password" />
+                <p class="error" hidden></p>
+                <p class="response" hidden></p>
+                <button id="submit">Submit</button>
+            </div>
+            <div id="map">
+                <iframe src="<%= map_url %>"></iframe>
+            </div>
         </div>
-        <iframe src="<%= map_url %>" width="600"></iframe>
     </body>
 </html>

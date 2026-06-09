@@ -9,3 +9,5 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive
 # Install clippy and rustfmt
 RUN rustup component add clippy-preview
 RUN rustup component add rustfmt
+RUN rustup install nightly
+RUN rustup default nightly
