@@ -11,10 +11,13 @@ use std::{
 
 #[derive(TemplateSimple)]
 #[template(path = "index.stpl")]
-struct IndexTemplate {
-    title: String,
-    map_url: String,
-    info: String,
+struct IndexTemplate<'a> {
+    title: &'a str,
+    map_url: &'a str,
+    info: &'a str,
+    username_label: &'a str,
+    password_label: &'a str,
+    submit_label: &'a str,
 }
 
 lazy_static! {
@@ -23,9 +26,12 @@ lazy_static! {
         std::env::var("RCON_PASSWORD").expect("RCON_PASSWORD not set!");
     static ref WHITELIST_PASSWORD: String =
         std::env::var("WHITELIST_PASSWORD").expect("WHITELIST_PASSWORD not set!");
-    static ref TITLE: String = std::env::var("TITLE").unwrap_or_default();
+    static ref TITLE: String = std::env::var("TITLE").unwrap_or_else(|_| String::from("Minecraft server"));
     static ref MAP_URL: String = std::env::var("MAP_URL").unwrap_or_default();
     static ref INFO: String = std::env::var("INFO").unwrap_or_default();
+    static ref USERNAME_LABEL: String = std::env::var("USERNAME_LABEL").unwrap_or_else(|_| String::from("Minecraft username:"));
+    static ref PASSWORD_LABEL: String = std::env::var("PASSWORD_LABEL").unwrap_or_else(|_| String::from("Whitelist password:"));
+    static ref SUBMIT_LABEL: String = std::env::var("SUBMIT_LABEL").unwrap_or_else(|_| String::from("Submit"));
 }
 
 #[derive(Clone)]
@@ -34,15 +40,18 @@ struct HelloWorld;
 impl HttpService for HelloWorld {
     fn call(&mut self, req: Request, rsp: &mut Response) -> io::Result<()> {
         // Api handling
-        let params: Vec<&str> = req.path().split("/").collect();
+        let params: Vec<&str> = req.path().split("/").skip(1).collect();
         match params[..] {
             // Index page
-            ["", ""] => {
+            [""] => {
                 // Render page from template
                 let ctx = IndexTemplate {
-                    title: (*TITLE).clone(),
-                    map_url: (*MAP_URL).clone(),
-                    info: (*INFO).clone(),
+                    title: &TITLE,
+                    map_url: &MAP_URL,
+                    info: &INFO,
+                    username_label: &USERNAME_LABEL,
+                    password_label: &PASSWORD_LABEL,
+                    submit_label: &SUBMIT_LABEL,
                 };
                 let content = ctx.render_once().unwrap();
 
@@ -57,7 +66,7 @@ impl HttpService for HelloWorld {
             }
 
             // Whitelist api route
-            ["", "api", "whitelist", password, username] => {
+            ["api", "whitelist", password, username] => {
                 if password != *WHITELIST_PASSWORD {
                     rsp.status_code(400, "bad request");
                     rsp.body("invalid whitelist password");
@@ -95,7 +104,7 @@ impl HttpService for HelloWorld {
             }
 
             // Static files
-            ["", filename, ..] => {
+            [filename, ..] => {
                 let static_content = include_dir!("static");
                 let path = Path::new(filename);
                 match static_content.get(path) {
