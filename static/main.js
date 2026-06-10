@@ -1,6 +1,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#submit').addEventListener('click', async () => {
+    document.querySelector('.whitelist-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
         const username = document.querySelector('#username').value;
         const password = document.querySelector('#password').value;
         const responseElement = document.querySelector('.response');
