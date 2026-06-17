@@ -11,3 +11,6 @@ RUN rustup component add clippy-preview
 RUN rustup component add rustfmt
 RUN rustup install nightly
 RUN rustup default nightly
+
+# Install cargo watch
+RUN cargo install cargo-watch

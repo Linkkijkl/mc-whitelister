@@ -5,9 +5,9 @@ WORKDIR /app
 # Backend
 RUN rustup default nightly
 ENV RUSTFLAGS="-C target-feature=-crt-static"
-# Future debugger: add your additional Rust specific files to the bellow.
+# Future debugger: add your additional Rust specific files below.
 # Specifying files makes Docker use cache if they are not modified,
-# skipping the tidiously long build.
+# skipping tidiously long builds.
 COPY Cargo.lock Cargo.toml ./
 COPY src src
 COPY templates templates
