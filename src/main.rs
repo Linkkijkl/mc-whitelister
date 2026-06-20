@@ -119,6 +119,8 @@ impl HttpService for HelloWorld {
                         match extension {
                             "js" => rsp.header("Content-Type: text/javascript"),
                             "css" => rsp.header("Content-Type: text/css"),
+                            "webp" => rsp.header("Content-Type: image/webp"),
+                            "otf" => rsp.header("Content-Type: font/otf"),
                             _ => rsp.header("Content-Type: text/plain"),
                         };
                     }

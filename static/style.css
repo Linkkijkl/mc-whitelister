@@ -1,5 +1,44 @@
+@font-face {
+    font-family: "Minecraft";
+    src: url("MinecraftRegular.otf");
+    font-style: normal;
+}
+@font-face {
+    font-family: "Minecraft";
+    src: url("MinecraftBold.otf");
+    font-weight: bold;
+}
+@font-face {
+    font-family: "Minecraft";
+    src: url("MinecraftItalic.otf");
+    font-style: italic;
+}
+@font-face {
+    font-family: "Minecraft";
+    src: url("MinecraftBoldItalic.otf");
+    font-style: bold;
+    font-style: italic;
+}
 body {
     margin: 0;
+    background-image: url("stone.webp");
+    font-family: "Minecraft";
+}
+h1 {
+    margin-top: .1em;
+    margin-bottom: .1em;
+}
+p, ul {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+button {
+    width: fit-content;
+    font-family: "Minecraft";
+}
+input {
+    margin-bottom: .7em;
+    font-family: "Minecraft";
 }
 .main-container {
     display: flex;
@@ -10,6 +49,7 @@ body {
     z-index: 1;
     width: 500px;
     padding: 1em;
+    overflow-y: scroll;
 }
 .error {
     color: red;
