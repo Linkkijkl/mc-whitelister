@@ -23,6 +23,8 @@ body {
     margin: 0;
     background-image: url("stone.webp");
     font-family: "Minecraft";
+    max-width: 100%;
+    max-height: 100%;
 }
 h1 {
     margin-top: .1em;
@@ -42,14 +44,15 @@ input {
 }
 .main-container {
     display: flex;
+    height: 100vh;
 }
 .whitelist-form {
     display: flex;
     flex-direction: column;
-    z-index: 1;
     width: 500px;
+    flex: 1 1 auto;
+    overflow: auto;
     padding: 1em;
-    overflow-y: scroll;
 }
 .error {
     color: red;
